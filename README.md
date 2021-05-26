@@ -1,12 +1,14 @@
 # jenkins-nvm-agent
 
-This agent builds on the [jenkins-agent](https://github.com/AHumanFromCA/jenkins-agent) by adding the ability to start the container with any nvm available Node.js version. Nvm is available to user root and jenknis. 
+This agent builds on the [jenkins-agent](https://github.com/awharn/jenkins-agent) by adding the ability to start the container with any nvm available Node.js version. Nvm is available to user root and jenkins. 
 
-The jenkins user can install npm items globally without having to run as root. 
+The jenkins user can install npm items globally without having to run as root.
+
+This agent is based on the [jenkins-nvm-agent](https://github.com/tucker01/jenkins-nvm-agent) by updating the default Node.js version and base image.
 
 ## Usage 
 
-`docker run jenkins-nvm-agent` will start the container with the default Node.js version (v10.11.0).
+`docker run jenkins-nvm-agent` will start the container with the default Node.js version (v12.22.1).
 
 To switch, set `NODE_JS_NVM_VERSION` environment variable to the desired version on the `docker run` command:
 ```

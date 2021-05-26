@@ -1,31 +1,31 @@
 # This docker file will build on the jenkins-agent to provide access to npm utilities
-FROM ahumanfromca/jenkins-agent
+FROM awharn/jenkins-agent
 
 USER root
 
 # Install minimum required software
-RUN echo "deb http://archive.ubuntu.com/ubuntu precise main universe" >> /etc/apt/sources.list
 RUN apt-get update
 
 RUN apt-get -y install git
 RUN apt-get -y install curl
 
-ENV JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
+ENV JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
 
 # Install curl, maven,
 RUN apt-get update && apt-get install -y \
 curl \
 git \
+openjdk-11-jdk \
 openjdk-8-jdk \
 sshpass \
 && rm -rf /var/lib/apt/lists/*
 
-# Add node version 10 which should bring in npm, add maven and build essentials and required ssl certificates to contact maven central
+# Add node version 12 which should bring in npm, add maven and build essentials and required ssl certificates to contact maven central
 # expect is also installed so that you can use that to login to your npm registry if you need to
 # Note: we'll install Node.js globally and include the build tools for pyhton - but nvm will override when the container starts
-RUN curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash -
+RUN curl -sL https://deb.nodesource.com/setup_12.x | sudo -E bash -
 RUN apt-get install -y nodejs expect build-essential maven ca-certificates-java && update-ca-certificates -f
-ENV NODE_JS_NVM_VERSION 10.11.0
+ENV NODE_JS_NVM_VERSION 12.22.1
 
 # Install nvm to enable multiple versions of node runtime and define environment 
 # variable for setting the desired node js version (defaulted to "current" for Node.js)
