@@ -10,6 +10,7 @@ RUN apt-get -y install git
 RUN apt-get -y install curl
 
 ENV JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
+ENV DEFAULT_NODE_VERSION=12.22.1
 
 # Install curl, maven,
 RUN apt-get update && apt-get install -y \
@@ -25,7 +26,6 @@ sshpass \
 # Note: we'll install Node.js globally and include the build tools for pyhton - but nvm will override when the container starts
 RUN curl -sL https://deb.nodesource.com/setup_12.x | sudo -E bash -
 RUN apt-get install -y nodejs expect build-essential maven ca-certificates-java && update-ca-certificates -f
-ENV NODE_JS_NVM_VERSION 12.22.1
 
 # Install nvm to enable multiple versions of node runtime and define environment 
 # variable for setting the desired node js version (defaulted to "current" for Node.js)
@@ -64,6 +64,9 @@ RUN rm -rdf ${tempDir}
 ARG scriptsDir=/usr/local/bin/
 COPY docker-entrypoint.sh ${scriptsDir}
 COPY install_node.sh ${scriptsDir}
+
+RUN install_node.sh $DEFAULT_NODE_VERSION
+RUN su -c "install_node.sh $DEFAULT_NODE_VERSION" - jenkins
 
 # Execute the setup script when the image is run. Setup will install the desired version via 
 # nvm for both the root user and jenkins - then start the ssh service
