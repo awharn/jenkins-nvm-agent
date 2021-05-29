@@ -40,6 +40,10 @@ USER jenkins
 RUN curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.11/install.sh | bash
 USER root
 
+# Get rid of dash and use bash instead
+RUN echo "dash dash/sh boolean false" | debconf-set-selections
+RUN DEBIAN_FRONTEND=noninteractive dpkg-reconfigure dash
+
 ARG tempDir=/tmp/jenkins-npm-agent
 ARG sshEnv=/etc/profile.d/npm_setup.sh
 ARG bashEnv=/etc/bash.bashrc
@@ -47,6 +51,11 @@ ARG bashEnv=/etc/bash.bashrc
 # First move the template file over
 RUN mkdir ${tempDir}
 COPY env.bashrc ${tempDir}/env.bashrc
+COPY env.bashrc /usr/local/env.sh
+
+# Next, make the file available to all to read and source
+RUN chmod +r /usr/local/env.sh
+ENV ENV=/usr/local/env.sh
 
 # Create a shell file that applies the configuration for sessions. (anything not bash really)
 RUN touch ${sshEnv} \
