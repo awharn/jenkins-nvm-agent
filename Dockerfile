@@ -51,11 +51,11 @@ ARG bashEnv=/etc/bash.bashrc
 # First move the template file over
 RUN mkdir ${tempDir}
 COPY env.bashrc ${tempDir}/env.bashrc
-COPY env.bashrc /usr/local/env.sh
+# COPY env.bashrc /usr/local/env.sh
 
 # Next, make the file available to all to read and source
-RUN chmod +r /usr/local/env.sh
-ENV ENV=/usr/local/env.sh
+# RUN chmod +r /usr/local/env.sh
+ENV ENV=${bashEnv}
 
 # Create a shell file that applies the configuration for sessions. (anything not bash really)
 RUN touch ${sshEnv} \
