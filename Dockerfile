@@ -10,7 +10,7 @@ RUN apt-get -y install git
 RUN apt-get -y install curl
 
 ENV JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
-ENV DEFAULT_NODE_VERSION=12.22.1
+ENV DEFAULT_NODE_VERSION=12.22.3
 
 # Install curl, maven,
 RUN apt-get update && apt-get install -y \
