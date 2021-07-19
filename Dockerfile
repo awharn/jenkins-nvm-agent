@@ -3,23 +3,8 @@ FROM awharn/jenkins-agent
 
 USER root
 
-# Install minimum required software
-RUN apt-get update
-
-RUN apt-get -y install git
-RUN apt-get -y install curl
-
 ENV JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
 ENV DEFAULT_NODE_VERSION=12.22.3
-
-# Install curl, maven,
-RUN apt-get update && apt-get install -y \
-curl \
-git \
-openjdk-11-jdk \
-openjdk-8-jdk \
-sshpass \
-&& rm -rf /var/lib/apt/lists/*
 
 # Add node version 12 which should bring in npm, add maven and build essentials and required ssl certificates to contact maven central
 # expect is also installed so that you can use that to login to your npm registry if you need to
@@ -76,6 +61,8 @@ COPY install_node.sh ${scriptsDir}
 
 RUN install_node.sh $DEFAULT_NODE_VERSION
 RUN su -c "install_node.sh $DEFAULT_NODE_VERSION" - jenkins
+
+RUN apt-get -q autoremove && apt-get -q clean -y && rm -rf /var/lib/apt/lists/* && rm -f /var/cache/apt/*.bin
 
 # Execute the setup script when the image is run. Setup will install the desired version via 
 # nvm for both the root user and jenkins - then start the ssh service
