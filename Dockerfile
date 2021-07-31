@@ -4,7 +4,7 @@ FROM awharn/jenkins-agent
 USER root
 
 ENV JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
-ENV DEFAULT_NODE_VERSION=12.22.3
+ENV DEFAULT_NODE_VERSION=12.22.4
 
 # Add node version 12 which should bring in npm, add maven and build essentials and required ssl certificates to contact maven central
 # expect is also installed so that you can use that to login to your npm registry if you need to
