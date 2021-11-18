@@ -8,7 +8,7 @@ This agent is based on the [jenkins-nvm-agent](https://github.com/tucker01/jenki
 
 ## Usage 
 
-`docker run jenkins-nvm-agent` will start the container with the default Node.js version (v12.22.5).
+`docker run jenkins-nvm-agent` will start the container with the default Node.js version (v12.22.7).
 
 To switch, set `NODE_JS_NVM_VERSION` environment variable to the desired version on the `docker run` command:
 ```
