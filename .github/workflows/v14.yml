@@ -30,9 +30,11 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           push: true
+          build-args: |
+            IMAGE_VERSION_ARG=14
           tags: |
-            awharn/jenkins-nvm-agent:latest
-            ghcr.io/awharn/jenkins-nvm-agent:latest
+            awharn/jenkins-nvm-agent:14
+            ghcr.io/awharn/jenkins-nvm-agent:14
       
       - name: Image Digest
         run:  echo ${{ steps.build.outputs.digest }}
@@ -40,6 +42,6 @@ jobs:
       - name: Update Downstream
         uses: benc-uk/workflow-dispatch@v1
         with: 
-          workflow: ci
+          workflow: v14
           repo:     awharn/jenkins-nvm-keytar
           token:    ${{ secrets.PAT }}

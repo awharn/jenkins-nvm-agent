@@ -1,20 +1,24 @@
 # This docker file will build on the jenkins-agent to provide access to npm utilities
-FROM awharn/jenkins-agent
+ARG IMAGE_VERSION_ARG=latest
+
+FROM awharn/jenkins-agent:latest
 
 USER root
 
+ARG IMAGE_VERSION_ARG
+ARG DEFAULT_NODE_VERSION=${IMAGE_VERSION_ARG:-12}
+
 ENV JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
-ENV DEFAULT_NODE_VERSION=12.22.7
 
 # Add node version 12 which should bring in npm, add maven and build essentials and required ssl certificates to contact maven central
 # expect is also installed so that you can use that to login to your npm registry if you need to
 # Note: we'll install Node.js globally and include the build tools for pyhton - but nvm will override when the container starts
-RUN curl -sL https://deb.nodesource.com/setup_12.x | sudo -E bash -
+RUN curl -sL "https://deb.nodesource.com/setup_$DEFAULT_NODE_VERSION.x" | sudo -E bash -
 RUN apt-get install -y nodejs expect build-essential maven ca-certificates-java && update-ca-certificates -f
 
 # Install nvm to enable multiple versions of node runtime and define environment 
 # variable for setting the desired node js version (defaulted to "current" for Node.js)
-RUN curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.11/install.sh | bash
+RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
 
 # dd the jenkins users
 RUN groupadd npmusers \
@@ -22,7 +26,7 @@ RUN groupadd npmusers \
 
 # Also install nvm for user jenkins
 USER jenkins
-RUN curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.11/install.sh | bash
+RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
 USER root
 
 # Get rid of dash and use bash instead
@@ -59,8 +63,8 @@ ARG scriptsDir=/usr/local/bin/
 COPY docker-entrypoint.sh ${scriptsDir}
 COPY install_node.sh ${scriptsDir}
 
-RUN install_node.sh $DEFAULT_NODE_VERSION
-RUN su -c "install_node.sh $DEFAULT_NODE_VERSION" - jenkins
+RUN install_node.sh ${DEFAULT_NODE_VERSION}
+RUN su -c "install_node.sh ${DEFAULT_NODE_VERSION}" - jenkins
 
 RUN apt-get -q autoremove && apt-get -q clean -y && rm -rf /var/lib/apt/lists/* && rm -f /var/cache/apt/*.bin
 
