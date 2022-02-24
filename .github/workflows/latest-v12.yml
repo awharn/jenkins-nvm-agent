@@ -44,6 +44,6 @@ jobs:
       - name: Update Downstream
         uses: benc-uk/workflow-dispatch@v1
         with: 
-          workflow: latest-v12
+          workflow: Node 12
           repo:     awharn/jenkins-nvm-keytar
           token:    ${{ secrets.PAT }}
