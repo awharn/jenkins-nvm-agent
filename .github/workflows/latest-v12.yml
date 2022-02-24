@@ -1,4 +1,4 @@
-name: ci
+name: Node 12
 on:
   push:
     branches:
